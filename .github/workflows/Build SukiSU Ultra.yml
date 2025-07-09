@@ -433,12 +433,28 @@ jobs:
         run: |
           echo "🏗️ 开始内核编译..."
           if [ "${{ github.event.inputs.KERNEL_VERSION }}" == "6.1" ]; then
-            export KBUILD_BUILD_TIMESTAMP="Wed May 29 07:25:40 UTC 2025"
             export PATH="$GITHUB_WORKSPACE/clang-21/bin:$PATH"
             export PATH="/usr/lib/ccache:$PATH"
             sudo apt install libelf-dev
             cd kernel_workspace/kernel_platform/common
-            make -j$(nproc --all) LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CC="ccache clang" O=out KCFLAGS+=-O2 gki_defconfig all
+            make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC=ccache clang HOSTCC=ccache clang HOSTCXX=ccache clang++ gki_defconfig
+            echo "正在配置内核选项..."
+            scripts/config --file out/.config \
+                -e LTO_CLANG \
+                -d LTO_NONE \
+                -e LTO_CLANG_THIN \
+                -d LTO_CLANG_FULL \
+                -e TCP_CONG_BBR \
+                -e NET_SCH_FQ \
+                -e DEFAULT_TCP_CONG_BBR \
+                -e DEFAULT_NET_SCHED_FQ \
+                -e CRYPTO_LZ4K_OPLUS
+            grep TCP_CONG out/.config
+
+            echo "正在使用所有可用核心编译内核..."
+            export KBUILD_BUILD_TIMESTAMP="Wed May 29 07:25:40 UTC 2025"
+            echo "设置原版构建时间成功！"
+            make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC=ccache clang HOSTCC=ccache clang HOSTCXX=ccache clang++ KCFLAGS=-Wno-error -j$(nproc --all)
           else
             cd kernel_workspace
             LTO=thin ./kernel_platform/oplus/build/oplus_build_kernel.sh ${{ github.event.inputs.CPUD }} gki
