@@ -37,7 +37,7 @@ jobs:
       - name: "验证 Clang 安装"
         run: |
           echo "验证 Clang 版本..."
-          clang- --version
+          clang --version
           if [ $? -ne 0 ]; then
               echo "Clang 21 未正确安装或未找到。" >&2
               exit 1
