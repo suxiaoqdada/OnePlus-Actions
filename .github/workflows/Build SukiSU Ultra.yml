@@ -440,7 +440,7 @@ jobs:
              cd kernel_workspace/kernel_platform/common
 
              # 生成配置
-             make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC="ccache clang" HOSTCC="ccache clang" HOSTCXX="ccache clang++" gki_defconfig
+             make ARCH=arm64 O=out LLVM=1 CC="ccache clang" HOSTCC="ccache clang" gki_defconfig
 
              # 修改配置
              echo "正在配置内核选项..."
@@ -463,7 +463,7 @@ jobs:
              echo "设置原版构建时间成功！"
 
              # 完整编译
-             make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC="ccache clang" HOSTCC="ccache clang" HOSTCXX="ccache clang++" KCFLAGS+=-O2 -j$(nproc --all)
+             make ARCH=arm64 O=out LLVM=1 CC="ccache clang" HOSTCC="ccache clang" KCFLAGS+=-O2 -j$(nproc --all)
           else
             cd kernel_workspace
             LTO=thin ./kernel_platform/oplus/build/oplus_build_kernel.sh ${{ github.event.inputs.CPUD }} gki
