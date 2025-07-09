@@ -439,9 +439,6 @@ jobs:
 
              cd kernel_workspace/kernel_platform/common
 
-             # 清理旧配置（如有）
-             make ARCH=arm64 O=out distclean
-
              # 生成配置
              make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC="ccache clang" HOSTCC="ccache clang" HOSTCXX="ccache clang++" gki_defconfig
 
