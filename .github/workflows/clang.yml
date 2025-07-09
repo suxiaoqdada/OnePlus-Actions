@@ -60,7 +60,7 @@ jobs:
           EOF
           
           echo "编译测试程序..."
-          clang -std=c++20 test_clang.cpp -o test_clang
+          clang test_clang.cpp -o test_clang
           if [ $? -ne 0 ]; then
               echo "编译失败，Clang 21 可能未正确安装。" >&2
               exit 1
