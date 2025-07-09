@@ -463,7 +463,7 @@ jobs:
              echo "设置原版构建时间成功！"
 
              # 完整编译
-             make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC="ccache clang" HOSTCC="ccache clang" HOSTCXX="ccache clang++" KCFLAGS=-Wno-error -j$(nproc --all)
+             make ARCH=arm64 O=out LLVM=1 LLVM_IAS=1 CC="ccache clang" HOSTCC="ccache clang" HOSTCXX="ccache clang++" KCFLAGS+=-O2 -j$(nproc --all)
           else
             cd kernel_workspace
             LTO=thin ./kernel_platform/oplus/build/oplus_build_kernel.sh ${{ github.event.inputs.CPUD }} gki
